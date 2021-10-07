@@ -1,0 +1,42 @@
+{
+  "name": "gaming-engine/timezone",
+  "description": "Timezone tools",
+  "keywords": [
+    "gaming-engine",
+    "date",
+    "timezone"
+  ],
+  "homepage": "https://github.com/gaming-engine/timezone",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Andrew Judd",
+      "email": "awjudd@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.0|^8.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "GamingEngine\\Timezone\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "GamingEngine\\Timezone\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
