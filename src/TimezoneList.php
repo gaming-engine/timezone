@@ -4,6 +4,7 @@ namespace GamingEngine\Timezone;
 
 use ArrayAccess;
 use DateTimeZone;
+use GamingEngine\Timezone\Exceptions\InvalidTimezoneException;
 use GamingEngine\Timezone\Exceptions\TimezoneListReadonlyException;
 use Iterator;
 
@@ -14,7 +15,7 @@ class TimezoneList implements ArrayAccess, Iterator
     /**
      * @var Timezone[]
      */
-    private array $timezones = [];
+    private array $timezones;
 
     /**
      * @param Timezone[] $timezones
@@ -25,11 +26,17 @@ class TimezoneList implements ArrayAccess, Iterator
         $this->timezones = $timezones;
     }
 
+    /**
+     * @throws InvalidTimezoneException
+     */
     public static function all(): TimezoneList
     {
         return static::fromTimezoneGroup(DateTimeZone::ALL);
     }
 
+    /**
+     * @throws InvalidTimezoneException
+     */
     public static function fromTimezoneGroup(int $timezoneGroup): TimezoneList
     {
         $timezones = [];
