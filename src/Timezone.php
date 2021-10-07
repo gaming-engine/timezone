@@ -15,6 +15,9 @@ class Timezone
 {
     private DateTimeZone $timezone;
 
+    /**
+     * @throws InvalidTimezoneException
+     */
     public function __construct(string $timezone)
     {
         try {
