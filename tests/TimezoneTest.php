@@ -74,15 +74,15 @@ class TimezoneTest extends TestCase
     }
 
     /**
-     * @return void
+     * @test
      */
-    public function timezone_returns_the_provided_timezone()
+    public function timezone_returns_the_name_if_asked()
     {
         // Arrange
         $subject = new Timezone('America/Toronto');
 
         // Act
-        $result = $subject->timezone;
+        $result = $subject->name;
 
         // Assert
         $this->assertEquals(
