@@ -154,4 +154,23 @@ class TimezoneListTest extends TestCase
         // Assert
         $this->assertTrue($result);
     }
+
+    /**
+     * @test
+     */
+    public function timezone_list_can_group_by_regions()
+    {
+        // Arrange
+        $subject = TimezoneList::groupByRegion();
+
+        // Act
+        $result = $subject['America'];
+
+        // Assert
+        $this->assertInstanceOf(
+            TimezoneList::class,
+            $result
+        );
+    }
+
 }

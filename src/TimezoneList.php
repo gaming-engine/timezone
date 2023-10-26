@@ -7,6 +7,7 @@ use DateTimeZone;
 use GamingEngine\Timezone\Exceptions\InvalidTimezoneException;
 use GamingEngine\Timezone\Exceptions\TimezoneListReadonlyException;
 use Iterator;
+use League\ISO3166\ISO3166;
 
 class TimezoneList implements ArrayAccess, Iterator
 {
@@ -35,25 +36,47 @@ class TimezoneList implements ArrayAccess, Iterator
     }
 
     /**
+     * @return TimezoneList[]
      * @throws InvalidTimezoneException
      */
-    public static function fromTimezoneGroup(int $timezoneGroup): TimezoneList
+    public static function groupByRegion(): array
+    {
+        $timezones = DateTimeZone::listIdentifiers();
+        $countries = [];
+        $lists = [];
+
+        foreach ($timezones as $timezone) {
+            $details = explode('/', $timezone);
+            $countries[$details[0]][] = new Timezone($timezone);
+        }
+
+        foreach($countries as $country => $timezones) {
+            $lists[$country] = new TimezoneList($timezones);
+        }
+
+        return $lists;
+    }
+
+    /**
+     * @throws InvalidTimezoneException
+     */
+    public static function fromTimezoneGroup(int $timezoneGroup, ?string $countryCode = null): TimezoneList
     {
         $timezones = [];
 
-        foreach (DateTimeZone::listIdentifiers($timezoneGroup) as $identifier) {
+        foreach (DateTimeZone::listIdentifiers($timezoneGroup, $countryCode) as $identifier) {
             $timezones[] = new Timezone($identifier);
         }
 
         return new self($timezones);
     }
 
-    public function offsetExists(mixed $offset)
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->timezones);
     }
 
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): ?Timezone
     {
         return $this->timezones[$offset];
     }
@@ -61,7 +84,7 @@ class TimezoneList implements ArrayAccess, Iterator
     /**
      * @throws TimezoneListReadonlyException
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new TimezoneListReadonlyException($offset);
     }
@@ -69,32 +92,32 @@ class TimezoneList implements ArrayAccess, Iterator
     /**
      * @throws TimezoneListReadonlyException
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset(mixed $offset): void
     {
         throw new TimezoneListReadonlyException($offset);
     }
 
-    public function current()
+    public function current(): Timezone
     {
         return $this->timezones[$this->key];
     }
 
-    public function next()
+    public function next(): void
     {
         $this->key++;
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->key;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return array_key_exists($this->key, $this->timezones);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->key = 0;
     }
