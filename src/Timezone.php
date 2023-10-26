@@ -34,10 +34,22 @@ class Timezone
         );
     }
 
+    /**
+     * @throws InvalidPropertyException
+     */
     public function __get($name)
     {
         if (method_exists($this, $name)) {
             return $this->$name();
+        }
+
+        if (method_exists($this->timezone, $name)) {
+            return $this->timezone->$name();
+        }
+
+        $method = "get". ucfirst($name);
+        if (method_exists($this->timezone, $method)) {
+            return $this->timezone->$method();
         }
 
         throw new InvalidPropertyException($name);
