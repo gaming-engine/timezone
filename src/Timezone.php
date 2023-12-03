@@ -27,17 +27,35 @@ class Timezone
         }
     }
 
-    public function offset()
+    public function offset(): int
     {
         return $this->timezone->getOffset(
             new DateTime('now', new DateTimeZone('UTC'))
         );
     }
 
+    public function offsetForHumans(): string
+    {
+        $offsetSeconds = $this->offset();
+
+        $offsetHours = floor($offsetSeconds / 3600);
+        $offsetMinutes = floor(($offsetSeconds % 3600) / 60);
+
+        $offsetSign = ($offsetSeconds < 0) ? '-' : '+';
+
+        return sprintf(
+            "(GMT %s%02d:%02d) %s",
+            $offsetSign,
+            abs($offsetHours),
+            abs($offsetMinutes),
+            $this->timezone->getName()
+        );
+    }
+
     /**
      * @throws InvalidPropertyException
      */
-    public function __get($name)
+    public function __get($name): mixed
     {
         if (method_exists($this, $name)) {
             return $this->$name();
