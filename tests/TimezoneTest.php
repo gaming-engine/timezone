@@ -29,13 +29,14 @@ class TimezoneTest extends TestCase
     public function timezone_provides_the_correct_offset_from_utc()
     {
         // Arrange
+        $today = new \DateTime();
 
         // Act
         $subject = new Timezone('America/Toronto');
 
         // Assert
         $this->assertEquals(
-            -4 * 60 * 60,
+            ( $today->format('I') === 1 ? -4 : -5) * 60 * 60,
             $subject->offset()
         );
     }
@@ -46,13 +47,14 @@ class TimezoneTest extends TestCase
     public function timezone_provides_the_correct_offset_from_utc_through_a_getter()
     {
         // Arrange
+        $today = new \DateTime();
 
         // Act
         $subject = new Timezone('America/Toronto');
 
         // Assert
         $this->assertEquals(
-            -4 * 60 * 60,
+            ( $today->format('I') === 1 ? -4 : -5) * 60 * 60,
             $subject->offset
         );
     }
@@ -87,6 +89,24 @@ class TimezoneTest extends TestCase
         // Assert
         $this->assertEquals(
             'America/Toronto',
+            $result
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function timezone_returns_the_proper_offset_for_humans_text()
+    {
+        // Arrange
+        $subject = new Timezone('America/Halifax');
+
+        // Act
+        $result = $subject->offsetForHumans();
+
+        // Assert
+        $this->assertEquals(
+            '(GMT -04:00) America/Halifax',
             $result
         );
     }
